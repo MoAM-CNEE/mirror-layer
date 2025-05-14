@@ -1,0 +1,23 @@
+apiVersion: openstack.crossplane.io/v1beta1
+kind: ProviderConfig
+metadata:
+  name: provider-config-openstack
+spec:
+  credentials:
+    source: Secret
+    secretRef:
+      namespace: mirror-layer
+      name: openstack-auth-config
+      key: config
+---
+apiVersion: kubernetes.crossplane.io/v1alpha1
+kind: ProviderConfig
+metadata:
+  name: provider-config-kubernetes
+spec:
+  credentials:
+    source: Secret
+    secretRef:
+      namespace: mirror-layer
+      name: kubeconfig
+      key: kubeconfig
