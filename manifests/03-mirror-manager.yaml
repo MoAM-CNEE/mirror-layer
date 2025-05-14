@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mirror-manager
+  labels:
+    app: mirror-manager
+    name: mirror-manager
+  namespace: mirror-layer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: mirror-manager
+  template:
+    metadata:
+      labels:
+        name: mirror-manager
+    spec:
+      containers:
+        - name: mirror-manager
+          image: proman3419/mirror-manager:0.0.0.1
+#          imagePullPolicy: "IfNotPresent"
+#          imagePullPolicy: "Always"
+          imagePullPolicy: "Never" # local repository
+          resources:
+            limits:
+              cpu: 500m
+              memory: 500Mi
+          ports:
+            - containerPort: 8000
+              name: mm-port
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mirror-manager-svc
+  namespace: mirror-layer
+spec:
+  selector:
+    name: mirror-manager
+  ports:
+  - name: sm-port
+    protocol: TCP
+    port: 8000
+    targetPort: sm-port
+# kubectl -n mirror-layer port-forward svc/mirror-manager-svc 8000:8000
