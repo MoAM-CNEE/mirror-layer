@@ -8,6 +8,7 @@ class ControlPlaneApplyRQ(BaseModel):
 
 
 class ControlPlaneDeleteRQ(BaseModel):
+    change_id: int
     api_version: str
     kind: str
     name: str
