@@ -29,4 +29,5 @@ echo "> Await install completion for $AWAIT_INSTALL_COMPLETION_S s"
 sleep $AWAIT_INSTALL_COMPLETION_S
 
 kubectl apply -f 02-control-plane-provider-configs.yaml
-kubectl apply -f 03-mirror-manager.yaml
+kubectl apply -f 03-control-plane-rbac.yaml
+kubectl apply -f 04-mirror-manager.yaml

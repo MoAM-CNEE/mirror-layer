@@ -1,0 +1,47 @@
+from fastapi import HTTPException
+from kubernetes import config, client
+from kubernetes.config.config_exception import ConfigException
+from kubernetes.dynamic import DynamicClient
+
+from mirror_manager.api.response_models import ControlPlaneApplyRS, ControlPlaneDeleteRS
+
+
+class ControlPlaneService:
+    def __init__(self):
+        try:
+            config.load_incluster_config()
+        except ConfigException:
+            config.load_kube_config()
+        self.k8s_client = DynamicClient(client.ApiClient())
+
+    def apply(self, change_id: int, entity_definition: dict) -> ControlPlaneApplyRS:
+        try:
+            api_version = entity_definition.get('apiVersion')
+            kind = entity_definition.get('kind')
+            name = entity_definition.get('metadata', {}).get('name')
+            dynamic_resource = self.k8s_client.resources.get(api_version=api_version, kind=kind)
+            existing_obj = dynamic_resource.get(name=name)
+            updated = False
+            if existing_obj:
+                dynamic_resource.patch(name=name, body=entity_definition,
+                                       content_type='application/merge-patch+json')
+                updated = True
+            else:
+                dynamic_resource.create(body=entity_definition)
+            return ControlPlaneApplyRS(change_id=change_id, updated=updated)
+        except Exception as e:
+            print(f"[ERROR] change_id={change_id}, detail={str(e)}")
+            raise HTTPException(status_code=500, detail=str(e))
+
+    def delete(self, change_id: int, api_version: str, kind: str, name: str,
+               namespace: str = None) -> ControlPlaneDeleteRS:
+        try:
+            dynamic_resource = self.k8s_client.resources.get(api_version=api_version, kind=kind)
+            if namespace:
+                dynamic_resource.namespace(namespace).delete(name=name)
+            else:
+                dynamic_resource.delete(name=name)
+            return ControlPlaneDeleteRS(change_id=change_id)
+        except Exception as e:
+            print(f"[ERROR] change_id={change_id}, detail={str(e)}")
+            raise HTTPException(status_code=500, detail=str(e))
