@@ -1,0 +1,36 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: control-plane-full-access
+rules:
+- apiGroups:
+    - "kubernetes.crossplane.io"
+    - "networking.openstack.crossplane.io"
+    - "compute.openstack.crossplane.io"
+    - "identity.openstack.crossplane.io"
+    - "containerinfra.openstack.crossplane.io"
+    - "db.openstack.crossplane.io"
+    - "keymanager.openstack.crossplane.io"
+    - "objectstorage.openstack.crossplane.io"
+    - "vpnaas.openstack.crossplane.io"
+    - "fw.openstack.crossplane.io"
+    - "images.openstack.crossplane.io"
+    - "blockstorage.openstack.crossplane.io"
+    - "dns.openstack.crossplane.io"
+    - "sharedfilesystem.openstack.crossplane.io"
+    - "orchestration.openstack.crossplane.io"
+  resources: ["*"]
+  verbs: ["*"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: mirror-layer-default-control-plane-full-access
+subjects:
+- kind: ServiceAccount
+  name: default
+  namespace: mirror-layer
+roleRef:
+  kind: ClusterRole
+  name: control-plane-full-access
+  apiGroup: rbac.authorization.k8s.io
