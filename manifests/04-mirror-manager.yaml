@@ -39,8 +39,8 @@ spec:
   selector:
     name: mirror-manager
   ports:
-  - name: sm-port
+  - name: mm-port
     protocol: TCP
     port: 8000
-    targetPort: sm-port
+    targetPort: mm-port
 # kubectl -n mirror-layer port-forward svc/mirror-manager-svc 8000:8000
