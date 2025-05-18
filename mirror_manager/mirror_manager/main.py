@@ -7,9 +7,9 @@ app = FastAPI()
 control_plane_service = ControlPlaneService()
 
 @app.post("/apply")
-def apply_resource(rq: ControlPlaneApplyRQ) -> ControlPlaneApplyRS:
-    return control_plane_service.apply(rq.change_id, rq.entity_definition)
+async def apply_resource(rq: ControlPlaneApplyRQ) -> ControlPlaneApplyRS:
+    return await control_plane_service.apply(rq.change_id, rq.entity_definition)
 
 @app.delete("/delete")
 async def delete_resource(rq: ControlPlaneDeleteRQ) -> ControlPlaneDeleteRS:
-    return control_plane_service.delete(rq.change_id, rq.api_version, rq.kind, rq.name, rq.namespace)
+    return await control_plane_service.delete(rq.change_id, rq.api_version, rq.kind, rq.name, rq.namespace)
