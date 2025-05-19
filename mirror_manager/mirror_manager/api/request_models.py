@@ -2,12 +2,12 @@ from pydantic import BaseModel
 from typing import Dict, Any, Optional
 
 
-class ControlPlaneApplyRQ(BaseModel):
+class ApplyOnControlPlaneRQ(BaseModel):
     change_id: int
     entity_definition: Dict[str, Any]
 
 
-class ControlPlaneDeleteRQ(BaseModel):
+class DeleteFromControlPlaneRQ(BaseModel):
     change_id: int
     api_version: str
     kind: str
