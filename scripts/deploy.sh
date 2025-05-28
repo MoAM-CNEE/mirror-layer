@@ -20,12 +20,12 @@ kubectl --namespace mirror-layer create secret generic openstack-auth-config --f
 KUBE_CONFIG_PATH=kubeconfig && \
 kubectl --namespace mirror-layer create secret generic kubeconfig --from-file=kubeconfig=$KUBE_CONFIG_PATH
 
-echo "> Await install completion for $AWAIT_INSTALL_COMPLETION_S s"
+echo "> Await Crossplane installation completion for $AWAIT_INSTALL_COMPLETION_S s"
 sleep $AWAIT_INSTALL_COMPLETION_S
 
 kubectl apply -f 01-control-plane-providers.yaml
 
-echo "> Await install completion for $AWAIT_INSTALL_COMPLETION_S s"
+echo "> Await providers installation completion for $AWAIT_INSTALL_COMPLETION_S s"
 sleep $AWAIT_INSTALL_COMPLETION_S
 
 kubectl apply -f 02-control-plane-provider-configs.yaml
