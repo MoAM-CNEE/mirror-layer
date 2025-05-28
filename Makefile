@@ -8,3 +8,5 @@ deploy: ## deploy to the Kubernetes cluster
 
 get-minikube-secrets: ## print Minikube secrets to be substituted in kubeconfig
 	./scripts/get_minikube_secrets.sh
+
+.DEFAULT_GOAL := help
